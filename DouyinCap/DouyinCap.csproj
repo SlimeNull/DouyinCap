@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Authors>SlimeNull</Authors>
+    <Product>Null.$(AssemblyName)</Product>
+    <Description>抖音直播间弹幕抓取工具</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BrowseSharp" Version="0.1.1" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="PuppeteerSharp" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>

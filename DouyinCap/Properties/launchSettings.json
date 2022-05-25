@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DouyinCap": {
+      "commandName": "Project",
+      "commandLineArgs": "--showbrowser 201024277202"
+    }
+  }
+}
