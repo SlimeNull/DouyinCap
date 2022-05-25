@@ -2,7 +2,7 @@
   "profiles": {
     "DouyinCap": {
       "commandName": "Project",
-      "commandLineArgs": "--showbrowser 201024277202"
+      "commandLineArgs": "--post-addr http://127.0.0.1:1145 --show-browser 269835938520"
     }
   }
 }
