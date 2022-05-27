@@ -52,7 +52,7 @@ namespace DouyinCap
                 if (options.PostAddress != null)
                     client = new RestClient(options.PostAddress);
 
-                Console.WriteLine($"Lading page...");
+                Console.WriteLine($"Loading page...");
                 using Page page = (await browser.PagesAsync())[0];
                 //await page.SetRequestInterceptionAsync(true);
                 //page.Request += Page_Request;
