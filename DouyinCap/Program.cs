@@ -44,7 +44,7 @@ namespace DouyinCap
                     Headless = !options.ShowBrowser,
                 });
 
-                RestClient? client;
+                RestClient? client = null;
                 long roomId = options.RoomId;
                 string liveHomeAddr = $"https://live.douyin.com/";
                 string liveRoomAddr = $"https://live.douyin.com/{roomId}";
@@ -91,7 +91,7 @@ namespace DouyinCap
 
                             Console.WriteLine($"{name}: {value}");
 
-                            if (options.PostAddress != null)
+                            if (client != null)
                             {
                                 var request = new RestRequest()
                                     .AddJsonBody(new
