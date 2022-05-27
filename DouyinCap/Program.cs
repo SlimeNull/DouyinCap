@@ -24,6 +24,19 @@ namespace DouyinCap
                 .WithParsed(MainAction);
         }
 
+        static Browser? browser;
+
+        static void AppExit(object? sender, EventArgs e)
+        {
+            browser?.Dispose();
+        }
+
+        static void ConsoleAppExit(object? sender, ConsoleCancelEventArgs e)
+        {
+            browser?.Dispose();
+            e.Cancel = true;
+        }
+
         static void MainAction(StartupOptions options)
         {
             async Task MainActionAsync()
@@ -38,10 +51,10 @@ namespace DouyinCap
                     Headless = !options.ShowBrowser,
                 });
 
-                AppDomain.CurrentDomain.ProcessExit += (s, e) =>
-                {
-                    browser?.Dispose();
-                };
+                Program.browser = browser;      // 存储到静态变量
+                
+                AppDomain.CurrentDomain.ProcessExit += AppExit;       // 自动关闭
+                Console.CancelKeyPress += ConsoleAppExit;
 
                 RestClient? client = null;
                 long roomId = options.RoomId;
@@ -53,8 +66,6 @@ namespace DouyinCap
 
                 Console.WriteLine($"Loading page...");
                 using Page page = (await browser.PagesAsync())[0];
-                //await page.SetRequestInterceptionAsync(true);
-                //page.Request += Page_Request;
 
                 await page.GoToAsync(liveHomeAddr);
                 await page.GoToAsync(liveRoomAddr);
@@ -108,7 +119,11 @@ namespace DouyinCap
                 }
             }
 
-            MainActionAsync().Wait();
+            try
+            {
+                MainActionAsync().Wait();
+            }
+            catch { }
         }
 
         class StartupOptions
