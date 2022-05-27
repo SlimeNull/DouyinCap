@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Esprima.Ast;
 using PuppeteerSharp;
 using RestSharp;
 
@@ -18,18 +19,12 @@ namespace DouyinCap
         }
         static void Main(string[] args)
         {
-            Console.CancelKeyPress += Console_CancelKeyPress;
-
             Parser.Default
                 .ParseArguments<StartupOptions>(args)
                 .WithParsed(MainAction);
         }
 
-        private static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
-        {
-
-        }
-
+        static Browser browser;
         static void MainAction(StartupOptions options)
         {
             async Task MainActionAsync()
@@ -43,6 +38,13 @@ namespace DouyinCap
                 {
                     Headless = !options.ShowBrowser,
                 });
+
+                AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+                {
+                    browser?.Dispose();
+                };
+
+                Program.browser = browser;
 
                 RestClient? client = null;
                 long roomId = options.RoomId;
@@ -70,7 +72,7 @@ namespace DouyinCap
                     {
                         string msgQuery = QueryHelper.AllChatMessages();
                         ElementHandle[]? msgs = await page.QuerySelectorAllAsync(msgQuery);
-                        
+
                         if (msgs.Length == 0)
                             lastDataId = null;
 
