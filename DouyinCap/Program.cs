@@ -1,5 +1,4 @@
 ﻿using CommandLine;
-using Esprima.Ast;
 using PuppeteerSharp;
 using RestSharp;
 
@@ -109,7 +108,7 @@ namespace DouyinCap
                                         Name = name,
                                         Value = value,
                                     });
-                                client.Post(request);
+                                await client.PostAsync(request);
                             }
                         }
                     }
