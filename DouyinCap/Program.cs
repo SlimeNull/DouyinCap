@@ -6,24 +6,13 @@ namespace DouyinCap
 {
     class Program
     {
-        static int signIndex = 0;
-        static string[] signs = { "-", "\\", "|", "/" };
-        static void Fetcher_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
-        {
-            if (signIndex >= signs.Length)
-                signIndex = 0;
-
-            Console.WriteLine($"Browser downloading... [{e.ProgressPercentage}%] {signs[signIndex]}");
-            signIndex++;
-        }
+        static Browser? browser;
         static void Main(string[] args)
         {
             Parser.Default
                 .ParseArguments<StartupOptions>(args)
                 .WithParsed(MainAction);
         }
-
-        static Browser? browser;
 
         static void AppExit(object? sender, EventArgs e)
         {
@@ -35,14 +24,23 @@ namespace DouyinCap
             browser?.Dispose();
             e.Cancel = true;
         }
+        static void Fetcher_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        {
+            Console.Write($"\rBrowser downloading... [{e.ProgressPercentage}%] {new string('.', DateTime.Now.Second % 4).PadRight(4)}");
+        }
 
         static void MainAction(StartupOptions options)
         {
             async Task MainActionAsync()
             {
                 using var fetcher = new BrowserFetcher();
-                fetcher.DownloadProgressChanged += Fetcher_DownloadProgressChanged;
-                await fetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+
+                if (!fetcher.LocalRevisions().Contains(BrowserFetcher.DefaultChromiumRevision))
+                {
+                    fetcher.DownloadProgressChanged += Fetcher_DownloadProgressChanged;
+                    await fetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                    Console.WriteLine();   // add a new line
+                }
 
                 Console.WriteLine($"Starting browser...");
                 using Browser browser = await Puppeteer.LaunchAsync(new LaunchOptions()
