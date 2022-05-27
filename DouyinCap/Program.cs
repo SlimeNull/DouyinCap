@@ -44,10 +44,13 @@ namespace DouyinCap
                     Headless = !options.ShowBrowser,
                 });
 
-                RestClient client = new RestClient(options.PostAddress);
+                RestClient? client;
                 long roomId = options.RoomId;
                 string liveHomeAddr = $"https://live.douyin.com/";
                 string liveRoomAddr = $"https://live.douyin.com/{roomId}";
+
+                if (options.PostAddress != null)
+                    client = new RestClient(options.PostAddress);
 
                 Console.WriteLine($"Lading page...");
                 using Page page = (await browser.PagesAsync())[0];
