@@ -24,7 +24,6 @@ namespace DouyinCap
                 .WithParsed(MainAction);
         }
 
-        static Browser browser;
         static void MainAction(StartupOptions options)
         {
             async Task MainActionAsync()
@@ -43,8 +42,6 @@ namespace DouyinCap
                 {
                     browser?.Dispose();
                 };
-
-                Program.browser = browser;
 
                 RestClient? client = null;
                 long roomId = options.RoomId;
@@ -112,14 +109,6 @@ namespace DouyinCap
             }
 
             MainActionAsync().Wait();
-        }
-
-        private static async void Page_Request(object? sender, RequestEventArgs e)
-        {
-            //if (e.Request.Url.Contains("douyinpic.com"))
-            //{
-            //    await e.Request.AbortAsync();
-            //}
         }
 
         class StartupOptions
